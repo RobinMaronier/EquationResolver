@@ -7,7 +7,7 @@
 *.userosscache
 *.sln.docstates
 
-opencv\*
+opencv/
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
