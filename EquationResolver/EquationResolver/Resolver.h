@@ -7,13 +7,13 @@
 #include "EquationPictureCutter.h"
 #include "CheckObjectType.h"
 
-class Resolver
+class Resolver // Main class, resolver
 {
 public:
-	Resolver(bool);
+	Resolver(bool); // not important
 	Resolver();
 	~Resolver();
-	std::string newEquation(EquationPicture *);
+	std::string newEquation(EquationPicture *); // first call
 
 private:
 

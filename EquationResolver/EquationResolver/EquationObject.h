@@ -7,7 +7,7 @@
 
 using namespace cv;
 
-class EquationObject
+class EquationObject // cximage equivalent
 {
 protected:
 	EquationObject();

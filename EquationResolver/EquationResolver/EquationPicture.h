@@ -6,7 +6,7 @@
 
 using namespace cv;
 
-class EquationPicture : public EquationObject
+class EquationPicture : public EquationObject // cximage equivalent
 {
 public:
 	EquationPicture(String);

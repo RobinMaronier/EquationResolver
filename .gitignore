@@ -2,3 +2,4 @@ opencv/
 *.exe
 Debug/
 *.obj
+*.log

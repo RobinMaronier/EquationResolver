@@ -17,12 +17,15 @@ Resolver::~Resolver()
 
 std::string Resolver::newEquation(EquationPicture *picture)
 {
-	this->cutter = new EquationPictureCutter(picture);
-	double resultNb = this->resolve();
+	this->cutter = new EquationPictureCutter(picture); // EquationPictureCutter is the class for separate every object of the picture/equation.
+														// A picture with "1 + 2 + 3 + 4" will be transform into several picture "1", "+", "2", "+", "3", "+", "4"
+	double resultNb = this->resolve(); // Main function
 
+	/* ========= Convertion double to string ================== */
 	std::ostringstream strs;
 	strs << resultNb;
 	std::string result = strs.str();
+	/* ======================================================================== */
 
 	delete (this->cutter);
 	return result;
@@ -34,33 +37,33 @@ double Resolver::resolve() {
 	double nb2 = 0;
 	CheckObjectType::ObjectType operation = CheckObjectType::Unknown;
 
-	while ((object = this->cutter->getNextEquationObject()) != NULL) {
+	while ((object = this->cutter->getNextEquationObject()) != NULL) { // I call getNextEquationObject which give me the next object of the equation ("1", next "+", next "2", .....)
 		std::string nb = "";
 		
-		CheckObjectType::ObjectType typeObject = this->compare.checkObject(object);
+		CheckObjectType::ObjectType typeObject = this->compare.checkObject(object); // Compare is the class used for compare each object and determined what is it
 
-		if (typeObject >= 20 && typeObject != CheckObjectType::Unknown) {
+		if (typeObject >= 20 && typeObject != CheckObjectType::Unknown) { // If it's a "+" or "-" or "*" or "/"
 			operation = typeObject;
 		}
-		else if (typeObject != CheckObjectType::Unknown) {
+		else if (typeObject != CheckObjectType::Unknown) { // If it's a "1" or "2" or "3" or ....... or "8" or "9" or "0"
 			nb += typeObject;
 		}
 
 		if (nb1 <= 0) {
 			nb1 = atof(nb.c_str());
 		}
-		else if (nb2 <= 0) {
+		else if (nb2 <= 0) { // If i have 2 numbers, then i make calcul
 			nb2 = atof(nb.c_str());
-			if (operation == CheckObjectType::AdditionSign) {
+			if (operation == CheckObjectType::AdditionSign) { // Addition
 				nb1 = makeAddition(nb1, nb2);
 			}
-			else if (operation == CheckObjectType::DivisionSign) {
+			else if (operation == CheckObjectType::DivisionSign) { // Division
 				nb1 = makeDivision(nb1, nb2);
 			}
-			else if (operation == CheckObjectType::MultiplicationSign) {
+			else if (operation == CheckObjectType::MultiplicationSign) { // Multiplication
 				nb1 = makeMultiplication(nb1, nb2);
 			}
-			else if (operation == CheckObjectType::SubstractionSign) {
+			else if (operation == CheckObjectType::SubstractionSign) { //Substraction
 				nb1 = makeSubstraction(nb1, nb2);
 			}
 		}

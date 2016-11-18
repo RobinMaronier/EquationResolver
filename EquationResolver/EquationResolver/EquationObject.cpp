@@ -4,7 +4,7 @@ EquationObject::EquationObject()
 {
 }
 
-EquationObject::EquationObject(int width, int height)
+EquationObject::EquationObject(int width, int height) // I don't know if this is functionnal
 {
 	Mat image(width, height, CV_8UC3, Scalar(0, 0, 0));
 	this->picture = image;
@@ -31,7 +31,7 @@ Color EquationObject::getColorAtIndex(int x, int y)
 	if (x >= width || y >= height) {
 		return Color();
 	}
-	Color color = this->picture.at<Vec3b>(Point(x, y));
+	Color color(this->picture.at<Vec3b>(Point(x, y)));
 	return color;
 }
 

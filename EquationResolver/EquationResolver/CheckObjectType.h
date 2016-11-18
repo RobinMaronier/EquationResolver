@@ -2,7 +2,7 @@
 
 #include "EquationObject.h"
 
-class CheckObjectType
+class CheckObjectType // Compare class
 {
 public:
 	enum ObjectType {
@@ -26,6 +26,6 @@ public:
 
 	CheckObjectType();
 	~CheckObjectType();
-	ObjectType checkObject(EquationObject *);
+	ObjectType checkObject(EquationObject *); // not implement, check every object for find what is it
 };
 

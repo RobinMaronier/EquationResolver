@@ -4,7 +4,7 @@
 
 using namespace cv;
 
-class Color
+class Color // RGBQUAD equivalent
 {
 private:
 	short red;
