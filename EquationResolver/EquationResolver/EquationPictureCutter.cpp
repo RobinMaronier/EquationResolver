@@ -1,49 +1,96 @@
 #include "EquationPictureCutter.h"
 
-EquationPictureCutter::EquationPictureCutter(EquationPicture *picture) // cut the entire picture into small ones
+
+EquationPictureCutter::EquationPictureCutter(EquationPicture* picture, bool withLog) // cut the entire picture into small ones
 {
+	/* Basic init */
+	this->withLog = withLog;
 	this->currentObject = 0;
-	/* cut picture 
+	/*----*/
 
-	=== EXAMPLE ===
+	log("Grayscaling the picture ...");
+	picture->Grayscaling();
+	log("Binarization the picture ...");
+	picture->Binarization();
 
-	(picture = "1 + 2 + 3")
+	// Load EquationPoints
+	log("Labeling the picture ...");
+	std::vector<EqPoint> eqpoints = picture->Labeling_SendCutPoints();
+	log("Done");
+	
+	int width, height;
+	Point p1, p2;
+	Color color;
+	for (int i = 0; i < eqpoints.size(); i++) {
+		p1 = eqpoints.at(i).getP1();
+		p2 = eqpoints.at(i).getP2();
+		width = p2.x - p1.x + 1;
+		height = p2.y - p1.y + 1;
+		log("New object found");
+		EquationObject* obj = new EquationObject(width, height);
 
-	objectCut1 = cutMyPicture(1, picture); --> want cut the "1"
-	objectCut2 = cutMyPicture(2, picture); --> want cut the "+"
-	objectCut3 = cutMyPicture(3, picture); --> want cut the "2"
-	[...]
-	======= cutMyPicture cut the object number given in parameter for example (or another way, as you want) =======
+		// Set Color
+		for (int y = 0; y < height; y++) {
+			for (int x = 0; x < width; x++) {
+				color = picture->getColorAtIndex(p1.x + x, p1.y + y);
+				obj->setColorAtIndex(x, y, color);
+			}
+		}
 
-	this->objects.push_back(objectCut1); --> "1"
-	this->objects.push_back(objectCut2); --> "+"
-	this->objects.push_back(objectCut3); --> "2"
-	[...]
+		/* BIG LOG */
+		//log("Object looks like : ");
+		//log(obj);
+		/* END BIG LOG */
 
-	================
+		// push object
+		this->objects.push_back(obj);
+		log("Object saved");
 
-	WARNING : to create a new EquationObject, i don't know if my constructor is functionnal, i didn't test it.
-	Maybe we have to read opencv documentation for learn how create a new image (MAT)
-
-	*/
+		// if you don't want to show cut images, make comment below
+		/*Mat imgMat = obj->getPicture();
+		imshow("Test", imgMat);
+		waitKey(0);*/
+	}
+	log("All objects found");
 }
 
 
+void EquationPictureCutter::log(std::string text)
+{
+	if (this->withLog) {
+		std::cout << text << std::endl;
+	}
+}
+
+void EquationPictureCutter::log(EquationObject *object)
+{
+	if (this->withLog) {
+		object->printLogObject();
+	}
+}
+
 EquationPictureCutter::~EquationPictureCutter()
 {
+	log("Deleting EquationPictureCutter");
 	std::list<EquationObject*>::iterator it = this->objects.begin();
 	for (it; it != this->objects.end(); ++it) {
-		delete (*it); /* verify */
+		delete * it;
+		this->objects.erase(it);
 	}
 }
 
 EquationObject* EquationPictureCutter::getNextEquationObject()
 {
-	if (this->objects.size() <= this->currentObject + 1) {
+	if (this->objects.size() <= this->currentObject) {
 		return NULL;
 	}
-	this->currentObject++;
 	std::list<EquationObject*>::iterator it = this->objects.begin();
 	std::advance(it, this->currentObject);
-	return *it; /* verify */
+	this->currentObject++;
+	return *it;
+}
+
+
+int EquationPictureCutter::getCurrentObject() {
+	return this->currentObject;
 }

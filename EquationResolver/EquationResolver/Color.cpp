@@ -1,6 +1,7 @@
 #include "Color.h"
 
-Color::Color(Vec3b color)
+// Vec3s
+Color::Color(Vec3s color)
 {
 	this->blue = color[0];
 	this->green = color[1];
@@ -9,9 +10,9 @@ Color::Color(Vec3b color)
 
 Color::Color()
 {
-	this->blue = 0;
-	this->green = 0;
-	this->red = 0;
+	this->blue = 255;
+	this->green = 255;
+	this->red = 255;
 }
 
 
@@ -32,4 +33,16 @@ short Color::getBlueColor()
 short Color::getGreenColor()
 {
 	return this->green;
+}
+
+void Color::setRedColor(short r) {
+	this->red = r;
+}
+
+void Color::setBlueColor(short b) {
+	this->blue = b;
+}
+
+void Color::setGreenColor(short g) {
+	this->green = g;
 }

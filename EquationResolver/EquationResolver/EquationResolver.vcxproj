@@ -154,19 +154,29 @@
   <ItemGroup>
     <ClCompile Include="CheckObjectType.cpp" />
     <ClCompile Include="Color.cpp" />
+    <ClCompile Include="EqPoints.cpp" />
     <ClCompile Include="EquationObject.cpp" />
+    <ClCompile Include="EquationOperator.cpp" />
     <ClCompile Include="EquationPicture.cpp" />
     <ClCompile Include="EquationPictureCutter.cpp" />
+    <ClCompile Include="LabelPoints.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="OperationObject.cpp" />
+    <ClCompile Include="Stack.cpp" />
     <ClCompile Include="Resolver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="CheckObjectType.h" />
     <ClInclude Include="Color.h" />
+    <ClInclude Include="EqPoints.h" />
     <ClInclude Include="EquationObject.h" />
+    <ClInclude Include="EquationOperator.h" />
     <ClInclude Include="EquationPicture.h" />
     <ClInclude Include="EquationPictureCutter.h" />
+    <ClInclude Include="LabelPoints.h" />
+    <ClInclude Include="OperationObject.h" />
     <ClInclude Include="Resolver.h" />
+    <ClInclude Include="Stack.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -6,14 +6,28 @@
 
 int main(int argc, char **argv)
 {
-	Resolver resolver; // Resolver is the main class. It will resolve the equation with a picture
-
+	Resolver *resolver = NULL;
 	std::string picturePath = "";
 
-	if (argc > 1) { // I check if a file/picture is given in parameter of the program...
-		picturePath = argv[1];
+	if (argc > 1) {
+		std::string arg1 = argv[1];
+		if (arg1 == "log") {
+			resolver = new Resolver(true);
+			if (argc > 2) {
+				picturePath = argv[2];
+			}
+			else {
+				std::cout << "Enter a picture path for the EquationResolver : ";
+				std::getline(std::cin, picturePath);
+			}
+		}
+		else {
+			resolver = new Resolver(false);
+			picturePath = argv[1];
+		}
 	}
 	else { // ... if not, i ask to write the path of a picture
+		resolver = new Resolver(false);
 		std::cout << "Enter a picture path for the EquationResolver : ";
 		std::getline(std::cin, picturePath);
 	}
@@ -21,18 +35,24 @@ int main(int argc, char **argv)
 	while (true) {
 		std::cout << std::endl << "Opening file : " << picturePath << std::endl;
 
-		EquationPicture *picture = new EquationPicture(picturePath); // EquationPicture is equivalent of cxImage from our class exercices (it's a home made class)
-		std::string result = resolver.newEquation(picture); // I give the path of the picture to the resolver, and return a string of the result
-		delete(picture);
+		try {
+			EquationPicture *picture = new EquationPicture(picturePath);
+			std::string result = resolver->newEquation(picture);
 
-		std::cout << "Result : " << result << std::endl;
+			delete(picture);
+			std::cout << "Result : " << result << std::endl;
+		} catch (Exception e) {
+			std::cerr << "Aborted ..." << std::endl;
+		}
 
+		 // I give the path of the picture to the resolver, and return a string of the result
 		std::cout << std::endl << "=====================================================" << std::endl
 			<< "Enter a picture path for the EquationResolver (exit for quit) : ";
 		std::getline(std::cin, picturePath);
 		if (picturePath == "exit")
 			break;
 	}
+	delete (resolver);
 	std::cout << std::endl << "Goodbye !" << std::endl;
 	system("pause");
 	return 0;

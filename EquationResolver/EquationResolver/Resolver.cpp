@@ -3,93 +3,86 @@
 Resolver::Resolver(bool withLog)
 {
 	this->withLog = withLog;
+	this->compare = new CheckObjectType(false); /* true = big log */
 }
-
-Resolver::Resolver()
-{
-	this->withLog = false;
-}
-
 
 Resolver::~Resolver()
 {
+	delete (this->compare);
 }
 
 std::string Resolver::newEquation(EquationPicture *picture)
 {
-	this->cutter = new EquationPictureCutter(picture); // EquationPictureCutter is the class for separate every object of the picture/equation.
-														// A picture with "1 + 2 + 3 + 4" will be transform into several picture "1", "+", "2", "+", "3", "+", "4"
-	double resultNb = this->resolve(); // Main function
+	log("Cutting the picture ...");
+	this->cutter = new EquationPictureCutter(picture, this->withLog);
 
+	log("Resolve the equation ...");
+	double resultNb = this->resolve(); // Main function
+	
 	/* ========= Convertion double to string ================== */
 	std::ostringstream strs;
 	strs << resultNb;
 	std::string result = strs.str();
-	/* ======================================================================== */
-
+	/* ========================================================= */
+	
 	delete (this->cutter);
+
+	log("End of resolution !");
 	return result;
 }
 
 double Resolver::resolve() {
 	EquationObject* object = NULL;
-	double nb1 = 0;
-	double nb2 = 0;
-	CheckObjectType::ObjectType operation = CheckObjectType::Unknown;
+	std::list<OperationObject*> listOperation;
 
-	while ((object = this->cutter->getNextEquationObject()) != NULL) { // I call getNextEquationObject which give me the next object of the equation ("1", next "+", next "2", .....)
+	while (1) {
 		std::string nb = "";
-		
-		CheckObjectType::ObjectType typeObject = this->compare.checkObject(object); // Compare is the class used for compare each object and determined what is it
+		CheckObjectType::ObjectType operation = CheckObjectType::Unknown;
 
-		if (typeObject >= 20 && typeObject != CheckObjectType::Unknown) { // If it's a "+" or "-" or "*" or "/"
-			operation = typeObject;
+		while ((object = this->cutter->getNextEquationObject()) != NULL) {
+			log("Get next object and compare...");
+			CheckObjectType::ObjectType typeObject = this->compare->checkObject(object);
+			if (typeObject >= 20 && typeObject != CheckObjectType::Unknown) {
+				log("Operation sign found !");
+				operation = typeObject;
+				break;
+			}
+			else if (typeObject != CheckObjectType::Unknown) {
+				log("Number found !");
+				std::stringstream ss;
+				ss << typeObject;
+				nb += ss.str();
+			}
+			else {
+				log("Unknown sign found !");
+			}
 		}
-		else if (typeObject != CheckObjectType::Unknown) { // If it's a "1" or "2" or "3" or ....... or "8" or "9" or "0"
-			nb += typeObject;
-		}
-
-		if (nb1 <= 0) {
-			nb1 = atof(nb.c_str());
-		}
-		else if (nb2 <= 0) { // If i have 2 numbers, then i make calcul
-			nb2 = atof(nb.c_str());
-			if (operation == CheckObjectType::AdditionSign) { // Addition
-				nb1 = makeAddition(nb1, nb2);
-			}
-			else if (operation == CheckObjectType::DivisionSign) { // Division
-				nb1 = makeDivision(nb1, nb2);
-			}
-			else if (operation == CheckObjectType::MultiplicationSign) { // Multiplication
-				nb1 = makeMultiplication(nb1, nb2);
-			}
-			else if (operation == CheckObjectType::SubstractionSign) { //Substraction
-				nb1 = makeSubstraction(nb1, nb2);
-			}
+		log("Update list of operation ...");
+		listOperation.push_back(new OperationObject(CheckObjectType::Number, nb));
+		if (operation != CheckObjectType::Unknown)
+			listOperation.push_back(new OperationObject(operation, ""));
+		else {
+			break;
 		}
 	}
-	return nb1;
-}
+	log("All object compared ! Resolve the equation ...");
+	/*std::string calculString = this->createStringOperation(listOperation);
+	std::cout << "Operation looks like : " + calculString << std::endl;*/
+	EquationOperator *operationResolver = new EquationOperator(listOperation);
+	double result = operationResolver->operate();
+	//delete operationResolver;
 
-double Resolver::makeAddition(double nb1, double nb2)
-{
-	return nb1 + nb2;
-}
-
-double Resolver::makeSubstraction(double nb1, double nb2)
-{
-	return nb1 - nb2;
-}
-
-double Resolver::makeDivision(double nb1, double nb2)
-{
-	if (nb1 > 0 && nb2 > 0) {
-		return nb1 / nb2;
+	std::list<OperationObject*>::iterator it = listOperation.begin();
+	for (it; it != listOperation.end(); ++it) {
+		delete * it;
+		listOperation.erase(it);
 	}
-	return 0.0;
+	return result;
 }
 
-double Resolver::makeMultiplication(double nb1, double nb2)
+void Resolver::log(std::string text)
 {
-	return nb1 * nb2;
+	if (this->withLog) {
+		std::cout << text << std::endl;
+	}
 }

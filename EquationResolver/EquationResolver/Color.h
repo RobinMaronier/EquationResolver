@@ -12,11 +12,15 @@ private:
 	short blue;
 
 public:
-	Color(Vec3b);
+	// Define using Vec3s
+	Color(Vec3s);
 	Color();
 	~Color();
 	short getRedColor();
 	short getBlueColor();
 	short getGreenColor();
+	void setRedColor(short);
+	void setBlueColor(short);
+	void setGreenColor(short);
 };
 

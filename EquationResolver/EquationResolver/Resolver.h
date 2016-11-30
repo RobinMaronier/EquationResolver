@@ -6,24 +6,23 @@
 #include "EquationPicture.h"
 #include "EquationPictureCutter.h"
 #include "CheckObjectType.h"
+#include "OperationObject.h"
+#include "EquationOperator.h"
 
 class Resolver // Main class, resolver
 {
 public:
-	Resolver(bool); // not important
-	Resolver();
+	Resolver(bool = false); // not important
 	~Resolver();
 	std::string newEquation(EquationPicture *); // first call
 
 private:
 
 	EquationPictureCutter* cutter;
-	CheckObjectType compare;
+	CheckObjectType *compare;
 	bool withLog;
 
 	double resolve();
-	double makeAddition(double, double);
-	double makeSubstraction(double, double);
-	double makeDivision(double, double);
-	double makeMultiplication(double, double);
+	//std::string createStringOperation(std::list<OperationObject*>);
+	void log(std::string);
 };
