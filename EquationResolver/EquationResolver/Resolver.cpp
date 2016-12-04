@@ -58,6 +58,12 @@ double Resolver::resolve() {
 			}
 		}
 		log("Update list of operation ...");
+		if (listOperation.size() > 0 && listOperation.back()->isOperation() && listOperation.back()->getOperationType() == CheckObjectType::SubstractionSign) {
+			listOperation.back()->updateToAddition();
+			std::string tmp = "-";
+			tmp += nb;
+			nb = tmp;
+		}
 		listOperation.push_back(new OperationObject(CheckObjectType::Number, nb));
 		if (operation != CheckObjectType::Unknown)
 			listOperation.push_back(new OperationObject(operation, ""));
@@ -70,7 +76,7 @@ double Resolver::resolve() {
 	std::cout << "Operation looks like : " + calculString << std::endl;*/
 	EquationOperator *operationResolver = new EquationOperator(listOperation);
 	double result = operationResolver->operate();
-	//delete operationResolver;
+	delete operationResolver;
 
 	std::list<OperationObject*>::iterator it = listOperation.begin();
 	for (it; it != listOperation.end(); ++it) {

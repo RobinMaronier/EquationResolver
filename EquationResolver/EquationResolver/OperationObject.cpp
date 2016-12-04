@@ -45,3 +45,9 @@ void OperationObject::setNewValue(double newValue)
 	this->value = newValue;
 	this->typeOperation = CheckObjectType::Number;
 }
+
+void OperationObject::updateToAddition() {
+	this->operation = true;
+	this->value = -1;
+	this->typeOperation = CheckObjectType::AdditionSign;
+}

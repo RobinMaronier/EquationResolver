@@ -4,7 +4,6 @@ EquationOperator::EquationOperator()
 {
 }
 
-
 EquationOperator::EquationOperator(std::list<OperationObject*> listOperation)
 {
 	this->listOperation = listOperation;
@@ -19,7 +18,7 @@ double EquationOperator::operate()
 	int indexOperator = -1;
 	std::cout << "For the equation \"" << this->createStringOperation() << "\" : " << std::endl;
 	while ((indexOperator = findIndexOfNextOperator()) >= 0) {
-		int subResult = resolveOperationWithIndexOfOperator(indexOperator);
+		double subResult = resolveOperationWithIndexOfOperator(indexOperator);
 		this->updateListAfterOperation(indexOperator, subResult);
 	}
 	return this->listOperation.front()->getValue();
@@ -125,7 +124,7 @@ double EquationOperator::makeSubstraction(double nb1, double nb2)
 
 double EquationOperator::makeDivision(double nb1, double nb2)
 {
-	if (nb1 > 0 && nb2 > 0) {
+	if (nb2 > 0) {
 		return nb1 / nb2;
 	}
 	return 0.0;

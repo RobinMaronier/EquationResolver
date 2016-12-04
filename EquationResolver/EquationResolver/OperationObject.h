@@ -17,5 +17,6 @@ public:
 	bool isOperation();
 	CheckObjectType::ObjectType getOperationType();
 	void setNewValue(double);
+	void updateToAddition();
 };
 
